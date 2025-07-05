@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Online Bookstore Schema
+
+model User {
+  id             String     @id @default(uuid())
+  name           String
+  userName       String
+  email          String     @unique
+  image          String?
+  refreshToken String?
+  updateToken String?
+  resetPasswordToken String?
+  password       String
+  updatedAt      DateTime   @updatedAt
+  createdAt      DateTime   @default(now())
+  purchasedBooks Book[]     @relation("UserBooks")
+  reviews        Review[]
+  orders         Order[]
+  cartItems      CartItem[]
+}
+
+model Book {
+  id       String  @id @default(uuid())
+  title    String
+  author   String
+  price    Int
+  coAuthor String?
+  userId   String?
+  user     User?   @relation("UserBooks", fields: [userId], references: [id], onDelete: Cascade)
+
+  // You may later want to add: reviews Review[]
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  content String
+  rating  Int
+  userId  String
+  bookId  String?
+  user    User    @relation(fields: [userId], references: [id])
+  // Optionally add relation to Book if needed in future
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  name        String
+  status      String
+  generatedAt DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model CartItem {
+  id     String   @id @default(uuid())
+  value  String[] // You might want to model this better if it relates to books
+  count  Int
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+}

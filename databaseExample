@@ -1,0 +1,141 @@
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "../src/generated/prisma"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// model GoogleUser {
+//   id        String   @id
+//   name      String?
+//   email     String   @unique
+//   image     String?
+//   role      UserRole @default(USER)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime
+// }
+
+// model Playlist {
+//   id                String              @id
+//   name              String
+//   description       String?
+//   userId            String
+//   createdAt         DateTime            @default(now())
+//   updatedAt         DateTime
+//   User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   ProblemInPlaylist ProblemInPlaylist[]
+
+//   @@unique([name, userId])
+// }
+
+// model Problem {
+//   id                 String              @id
+//   title              String
+//   description        String
+//   difficulty         Difficulty
+//   tags               String[]
+//   userId             String
+//   examples           Json
+//   constraints        String
+//   hints              String?
+//   editorial          String?
+//   testcases          Json
+//   codeSnippets       Json
+//   referenceSolutions Json
+//   createdAt          DateTime            @default(now())
+//   updatedAt          DateTime
+//   User               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   ProblemInPlaylist  ProblemInPlaylist[]
+//   ProblemSolved      ProblemSolved[]
+//   Submission         Submission[]
+// }
+
+// model ProblemInPlaylist {
+//   id         String   @id
+//   playListId String
+//   problemId  String
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime
+//   Playlist   Playlist @relation(fields: [playListId], references: [id], onDelete: Cascade)
+//   Problem    Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+// }
+
+// model ProblemSolved {
+//   id        String   @id
+//   userId    String
+//   problemId String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime
+//   Problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+//   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([userId, problemId])
+// }
+
+// model Submission {
+//   id             String           @id
+//   userId         String
+//   problemId      String
+//   sourceCode     Json
+//   language       String
+//   stdin          String?
+//   stdout         String?
+//   stderr         String?
+//   compileOutput  String?
+//   status         String
+//   memory         String?
+//   time           String?
+//   createdAt      DateTime         @default(now())
+//   updatedAt      DateTime
+//   Problem        Problem          @relation(fields: [problemId], references: [id], onDelete: Cascade)
+//   User           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   TestCaseResult TestCaseResult[]
+// }
+
+// model TestCaseResult {
+//   id            String     @id
+//   submissionId  String
+//   testCase      Int
+//   passed        Boolean
+//   stdout        String?
+//   expected      String
+//   stderr        String?
+//   compileOutput String?
+//   status        String
+//   memory        String?
+//   time          String?
+//   createdAt     DateTime   @default(now())
+//   updatedAt     DateTime
+//   Submission    Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+//   @@index([submissionId])
+// }
+
+// model User {
+//   id            String          @id
+//   name          String?
+//   email         String          @unique
+//   image         String?
+//   role          UserRole        @default(USER)
+//   password      String
+//   createdAt     DateTime        @default(now())
+//   updatedAt     DateTime
+//   Playlist      Playlist[]
+//   Problem       Problem[]
+//   ProblemSolved ProblemSolved[]
+//   Submission    Submission[]
+// }
+
+// enum Difficulty {
+//   EASY
+//   MEDIUM
+//   HARD
+// }
+
+// enum UserRole {
+//   ADMIN
+//   USER
+// }
