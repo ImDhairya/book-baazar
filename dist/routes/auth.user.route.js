@@ -9,4 +9,5 @@ const userRoutes = express_1.default.Router();
 userRoutes.route("/login").post(auth_user_controller_1.loginController);
 userRoutes.route("/register").post(auth_user_controller_1.registerController);
 userRoutes.route("/logout").get(auth_user_controller_1.logoutController);
+userRoutes.route('/forgetPassword');
 exports.default = userRoutes;

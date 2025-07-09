@@ -45,7 +45,8 @@ exports.loginController = (0, async_handler_1.asyncHandler)((req, res) => __awai
         id: user.id,
     };
     // bcrypt.compare()
-    const cookieData = yield jsonwebtoken_1.default.sign(cookiePayload, process.env.JWT_SECRET);
+    const cookieData = jsonwebtoken_1.default.sign(cookiePayload, process.env.JWT_SECRET);
+    console.log(cookieData, "The user credentials for login");
     res.cookie("JWT", cookieData, {
         httpOnly: true,
         sameSite: "strict",
@@ -74,6 +75,7 @@ exports.registerController = (0, async_handler_1.asyncHandler)((req, res) => __a
     if (!userName || !email || !password || !name) {
         throw new api_errors_1.ApiError(401, "The required details are not found.");
     }
+    console.log(userName, email, password, name, "the user register credentials.");
     const validator = validator_1.RegisterUser.safeParse({ userName, email, password, name });
     if (!validator.success) {
         throw new api_errors_1.ApiError(401, "The validation for data failed.", validator.error.issues);
@@ -101,13 +103,7 @@ exports.registerController = (0, async_handler_1.asyncHandler)((req, res) => __a
             userName: true,
         },
     });
-    const jwtPayload = {
-        id: user.id,
-        name: user.name,
-    };
-    const token = yield jsonwebtoken_1.default.sign(jwtPayload, process.env.JWTSECRET, {
-        expiresIn: "7d",
-    });
+    console.log(user, "DbUser");
     // res.cookie("jwt", token, {
     //     httpOnly: true,
     //     sameSite: "strict",
@@ -117,7 +113,9 @@ exports.registerController = (0, async_handler_1.asyncHandler)((req, res) => __a
     // const responseData = [user.id, user.name, user.userName];
     // return new ApiResponse(200, responseData, "User Registered Successfully!");
     const responseData = [user.id, user.name, user.userName];
+    console.log(responseData, "Validation errror.");
     const apiResponse = new api_response_1.ApiResponse(200, responseData, "User Registered successfully.");
+    console.log(apiResponse, "apiresponse");
     return res.status(apiResponse.statusCode).json(apiResponse);
 }));
 exports.logoutController = (0, async_handler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

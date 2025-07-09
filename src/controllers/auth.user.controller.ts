@@ -13,6 +13,7 @@ export const loginController = asyncHandler(
     if (!email || !password) {
       throw new ApiError(401, "User credentials are requred");
     }
+
     const validationResult = LoginUserValidation.safeParse({email, password});
     if (!validationResult.success) {
       throw new ApiError(
@@ -45,7 +46,8 @@ export const loginController = asyncHandler(
       id: user.id,
     };
     // bcrypt.compare()
-    const cookieData = await jwt.sign(cookiePayload, process.env.JWT_SECRET!);
+    const cookieData = jwt.sign(cookiePayload, process.env.JWT_SECRET!);
+    console.log(cookieData, "The user credentials for login");
 
     res.cookie("JWT", cookieData, {
       httpOnly: true,
@@ -92,7 +94,13 @@ export const registerController = asyncHandler(
     if (!userName || !email || !password || !name) {
       throw new ApiError(401, "The required details are not found.");
     }
-
+    console.log(
+      userName,
+      email,
+      password,
+      name,
+      "the user register credentials."
+    );
     const validator = RegisterUser.safeParse({userName, email, password, name});
 
     if (!validator.success) {
@@ -102,7 +110,6 @@ export const registerController = asyncHandler(
         validator.error.issues
       );
     }
-
     const existingUser = await db.user.findUnique({
       where: {
         email: email,
@@ -130,14 +137,7 @@ export const registerController = asyncHandler(
       },
     });
 
-    const jwtPayload = {
-      id: user.id,
-      name: user.name,
-    };
-
-    const token = await jwt.sign(jwtPayload, process.env.JWTSECRET!, {
-      expiresIn: "7d",
-    });
+    console.log(user, "DbUser");
 
     // res.cookie("jwt", token, {
     //     httpOnly: true,
@@ -151,12 +151,15 @@ export const registerController = asyncHandler(
     // return new ApiResponse(200, responseData, "User Registered Successfully!");
 
     const responseData = [user.id, user.name, user.userName];
+    console.log(responseData, "Validation errror.");
 
     const apiResponse = new ApiResponse(
       200,
       responseData,
       "User Registered successfully."
     );
+
+    console.log(apiResponse, "apiresponse");
 
     return res.status(apiResponse.statusCode).json(apiResponse);
   }
