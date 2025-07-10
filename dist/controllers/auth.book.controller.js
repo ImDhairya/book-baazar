@@ -9,12 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handelGetBook = void 0;
-const handelGetBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
+exports.getBooks = void 0;
+const api_response_1 = require("../utils/api-response");
+const async_handler_1 = require("../utils/async-handler");
+const db_1 = require("../libs/db");
+const api_errors_1 = require("../utils/api-errors");
+exports.getBooks = (0, async_handler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const books = yield db_1.db.book.findMany({});
+    if (books) {
+        const response = new api_response_1.ApiResponse(200, books, "Books fetched successfully");
+        return res.status(response.statusCode).json(response);
     }
-    catch (error) {
-        console.error(error, "Error fetching data from the database.");
+    else {
+        throw new api_errors_1.ApiError(401, "Unable to find books");
     }
-});
-exports.handelGetBook = handelGetBook;
+}));

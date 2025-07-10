@@ -1,31 +1,29 @@
-// import {NextFunction, Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
+import {ApiError} from "../utils/api-errors";
+import {db} from "../libs/db";
+import jwt, {JwtPayload} from "jsonwebtoken";
 
-// export const Authenticated = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { token } = req.cookies;
+interface AuthenticatedResponse extends Response {
+  user?: string | JwtPayload; // replace with your actual payload shape
+}
 
-//     if (!token)  {
-//       return res.status(401).json({
-//         message: 'Authentication token missing.'
-//       })
-//     }
+export const isAuthenticated = async (
+  req: Request,
+  res: AuthenticatedResponse,
+  next: NextFunction
+) => {
+  const {jwtToken} = req.cookies;
 
-    
+  if (!jwtToken) {
+    throw new ApiError(501, "User authentication failed");
+  }
 
-//     // how do i authenticate from cookie
+  const decode = await jwt.verify(jwtToken, process.env.JWT_SECRET!);
 
-//     // const user = await user.model.findone({token})
-
-//     // if(!user) {
-//     //   return res.status(403).json({message: "Invalid or expired token."});
-
-//     // }
-//     next()
-//   } catch (error) {
-//     console.error(error, "There is an error in middleware authentication.");
-//   }
-// };
+  if (decode) {
+    res.user = decode;
+    next();
+  } else {
+    throw new ApiError(501, "User not authenticated to this route.");
+  }
+};

@@ -11,21 +11,21 @@ datasource db {
 // Online Bookstore Schema
 
 model User {
-  id             String     @id @default(uuid())
-  name           String
-  userName       String
-  email          String     @unique
-  image          String?
-  refreshToken String?
-  updateToken String?
+  id                 String     @id @default(uuid())
+  name               String
+  userName           String
+  email              String     @unique
+  image              String?
+  refreshToken       String?
+  updateToken        String?
   resetPasswordToken String?
-  password       String
-  updatedAt      DateTime   @updatedAt
-  createdAt      DateTime   @default(now())
-  purchasedBooks Book[]     @relation("UserBooks")
-  reviews        Review[]
-  orders         Order[]
-  cartItems      CartItem[]
+  password           String
+  updatedAt          DateTime   @updatedAt
+  createdAt          DateTime   @default(now())
+  purchasedBooks     Book[]     @relation("UserBooks")
+  reviews            Review[]
+  orders             Order[]
+  cartItems          CartItem[]
 }
 
 model Book {

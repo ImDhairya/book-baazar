@@ -4,6 +4,7 @@ import userRoutes from "./routes/auth.user.route";
 // import bookRoute from "./routes/auth.book.route";
 import errorHandler from "./utils/errorHandler";
 import cookieParser from "cookie-parser";
+import bookRoute from "./routes/auth.book.route";
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET || "defaultSecret"));
 
 app.use("/api/v1/auth", userRoutes);
+app.use('/api/v1/book',bookRoute )
 
 // app.use("/api/v1/books", bookRoute);
 // app.get("/", (req, res) => {
