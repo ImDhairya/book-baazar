@@ -8,7 +8,7 @@ interface AuthenticatedResponse extends Response {
   user?: string | JwtPayload;
 }
 interface AuthenticatedRequest extends Request {
-  user?: string | JwtPayload
+  user?: string | JwtPayload;
 }
 export const isAuthenticated = async (
   req: AuthenticatedRequest,
@@ -61,7 +61,7 @@ export const isAuthenticated = async (
           accessToken: createToken?.accessToken,
         },
       });
-      req.user = decodeRefreshToken
+      req.user = decodeRefreshToken;
       console.log(createToken, "hiello");
       return next();
       // query to the db that is the user with this refresh token there or not

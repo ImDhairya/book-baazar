@@ -27,3 +27,10 @@ export const LoginUserValidation = z.object({
   password: passwordValidator,
   email: emailValidation,
 });
+
+export const BookDataValidator = z.object({
+  title: z.string(),
+  author: z.string(),
+  price: z.number(),
+  coAuthor: z.string().optional(),
+});
