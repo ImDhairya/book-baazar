@@ -1,9 +1,7 @@
 "use strict";
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
@@ -27,7 +25,7 @@ app.use("/api/v1/book", auth_book_route_1.default);
 //   res.send({message: "App is working "});
 // });
 app.get("/healthCheck", (req, res) => {
-  return res.send("The app is working and healthy.");
+    return res.send("The app is working and healthy.");
 });
 app.use(errorHandler_1.default);
 exports.default = app;

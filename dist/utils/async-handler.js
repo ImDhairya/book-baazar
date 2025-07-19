@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.asyncHandler = asyncHandler;
 function asyncHandler(requestHandler) {
-  return (req, res, next) => {
-    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
-  };
+    return (req, res, next) => {
+        Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+    };
 }
 // class myProfile<ContentValue, Name, MyAge, MyAddress> {
 //   content: ContentValue;

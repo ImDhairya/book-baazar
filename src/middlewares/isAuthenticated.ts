@@ -7,8 +7,11 @@ import { db } from "../libs/db";
 interface AuthenticatedResponse extends Response {
   user?: string | JwtPayload;
 }
+interface AuthenticatedRequest extends Request {
+  user?: string | JwtPayload
+}
 export const isAuthenticated = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: AuthenticatedResponse,
   next: NextFunction
 ) => {
@@ -18,7 +21,7 @@ export const isAuthenticated = async (
     if (accessToken) {
       const decodedData = jwt.verify(accessToken, process.env.ACCESS_SECRET!);
 
-      res.user = decodedData;
+      req.user = decodedData;
       return next();
     } else {
       console.log("Access token not there.");
@@ -58,7 +61,8 @@ export const isAuthenticated = async (
           accessToken: createToken?.accessToken,
         },
       });
-      console.log(decodeRefreshToken, "hiello");
+      req.user = decodeRefreshToken
+      console.log(createToken, "hiello");
       return next();
       // query to the db that is the user with this refresh token there or not
       // const data = {
