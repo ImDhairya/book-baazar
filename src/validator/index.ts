@@ -29,8 +29,19 @@ export const LoginUserValidation = z.object({
 });
 
 export const BookDataValidator = z.object({
-  title: z.string(),
-  author: z.string(),
-  price: z.number(),
+  title: z.string("Please provide title."),
+  author: z.string("Please provide author."),
+  price: z.number("Please make sure price is mentioned."),
   coAuthor: z.string().optional(),
+});
+
+export const reviewDataValidatoin = z.object({
+  rating: z.number(),
+  content: z.string(),
+  bookId: z.string(),
+});
+
+export const orderValiation = z.object({
+  name: z.string("The name of the order is required"),
+  status: z.string("Please provide the status of the order."),
 });

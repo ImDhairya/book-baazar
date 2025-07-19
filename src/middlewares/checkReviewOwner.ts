@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomRequest } from "../controllers/auth.book.controller";
 import { db } from "../libs/db";
-import { ApiError } from "./api-errors";
+import { ApiError } from "../utils/api-errors";
 
-export async function accountOwner(req: CustomRequest, res: Response, next: NextFunction) {
+export async function reviewOwner(req: CustomRequest, res: Response, next: NextFunction) {
   const userId = req?.user?.id;
   const { id } = req.params;
 
@@ -16,17 +16,20 @@ export async function accountOwner(req: CustomRequest, res: Response, next: Next
       where: { id: userId },
     });
 
-    const checkBook = await db.book.findUnique({
+    const checkReview = await db.review.findUnique({
       where: {
         id,
       },
     });
+    if (!checkReview) {
+      return next(new ApiError(401, "The review not found."));
+    }
 
     if (!checkUser) {
       return next(new ApiError(404, "User not found"));
     }
 
-    if (checkBook?.userId !== userId) {
+    if (checkReview?.userId !== userId) {
       return next(new ApiError(404, "User check failed."));
     }
 

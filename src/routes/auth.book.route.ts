@@ -12,7 +12,7 @@
 import express from "express";
 import { addBook, deleteBook, getBooks, updateBook } from "../controllers/auth.book.controller";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
-import { accountOwner } from "../utils/checkOwner";
+import { accountOwner } from "../middlewares/checkOwner";
 
 const bookRoute = express.Router();
 

@@ -23,7 +23,11 @@ export const getBooks = asyncHandler(async (req: Request, res: Response) => {
 
 export const addBook = asyncHandler(async (req: CustomRequest, res: Response) => {
   const bookData = req.body;
-
+  const validationBooks = BookDataValidator.safeParse(bookData);
+  console.log(validationBooks, "FFIO");
+  if (!validationBooks.success) {
+    throw new ApiError(401, "Unable to parse data successfully", validationBooks.error.issues);
+  }
   if (!bookData) {
     throw new ApiError(401, "Please provide all required book data.");
   }
@@ -52,7 +56,7 @@ export const updateBook = asyncHandler(async (req: CustomRequest, res: Response)
   const bookData = req.body;
   const userId = req?.user?.id;
   const validationBooks = BookDataValidator.safeParse(bookData);
-
+  console.log(validationBooks, "FFIO");
   if (!validationBooks.success) {
     throw new ApiError(401, "Unable to parse data successfully", validationBooks.error.issues);
   }

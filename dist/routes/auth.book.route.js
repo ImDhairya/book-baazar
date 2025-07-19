@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_book_controller_1 = require("../controllers/auth.book.controller");
 const isAuthenticated_1 = require("../middlewares/isAuthenticated");
-const checkOwner_1 = require("../utils/checkOwner");
+const checkOwner_1 = require("../middlewares/checkOwner");
 const bookRoute = express_1.default.Router();
 bookRoute
   .route("/getbooks")

@@ -6,6 +6,8 @@ import errorHandler from "./utils/errorHandler";
 import cookieParser from "cookie-parser";
 import bookRoute from "./routes/auth.book.route";
 import { healthCheckController } from "./middlewares/healthCheck";
+import reviewRoutes from "./routes/auth.review.route";
+import orderRoutes from "./routes/auth.order.route";
 
 const app = express();
 app.use(cors());
@@ -17,6 +19,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET || "defaultSecret"));
 app.use(healthCheckController);
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/book", bookRoute);
+app.use("/api/v1/review", reviewRoutes);
+app.use("/api/v1/order", orderRoutes);
 
 // app.use("/api/v1/books", bookRoute);
 // app.get("/", (req, res) => {

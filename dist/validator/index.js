@@ -52,7 +52,12 @@ var __importStar =
     };
   })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookDataValidator = exports.LoginUserValidation = exports.RegisterUser = void 0;
+exports.orderValiation =
+  exports.reviewDataValidatoin =
+  exports.BookDataValidator =
+  exports.LoginUserValidation =
+  exports.RegisterUser =
+    void 0;
 const z = __importStar(require("zod/v4"));
 const emailValidation = z
   .email("Invalid email format.")
@@ -79,8 +84,17 @@ exports.LoginUserValidation = z.object({
   email: emailValidation,
 });
 exports.BookDataValidator = z.object({
-  title: z.string(),
-  author: z.string(),
-  price: z.number(),
+  title: z.string("Please provide title."),
+  author: z.string("Please provide author."),
+  price: z.number("Please make sure price is mentioned."),
   coAuthor: z.string().optional(),
+});
+exports.reviewDataValidatoin = z.object({
+  rating: z.number(),
+  content: z.string(),
+  bookId: z.string(),
+});
+exports.orderValiation = z.object({
+  name: z.string("The name of the order is required"),
+  status: z.string("Please provide the status of the order."),
 });

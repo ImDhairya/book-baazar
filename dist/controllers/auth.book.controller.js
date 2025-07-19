@@ -52,6 +52,15 @@ exports.addBook = (0, async_handler_1.asyncHandler)((req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const bookData = req.body;
+    const validationBooks = validator_1.BookDataValidator.safeParse(bookData);
+    console.log(validationBooks, "FFIO");
+    if (!validationBooks.success) {
+      throw new api_errors_1.ApiError(
+        401,
+        "Unable to parse data successfully",
+        validationBooks.error.issues
+      );
+    }
     if (!bookData) {
       throw new api_errors_1.ApiError(401, "Please provide all required book data.");
     }
@@ -84,6 +93,7 @@ exports.updateBook = (0, async_handler_1.asyncHandler)((req, res) =>
         ? void 0
         : _a.id;
     const validationBooks = validator_1.BookDataValidator.safeParse(bookData);
+    console.log(validationBooks, "FFIO");
     if (!validationBooks.success) {
       throw new api_errors_1.ApiError(
         401,
