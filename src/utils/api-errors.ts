@@ -32,12 +32,7 @@ class ApiError extends Error {
   errors: object[];
   success: boolean;
 
-  constructor(
-    statusCode: number,
-    message: string,
-    errors: object[] = [],
-    stack: string = ""
-  ) {
+  constructor(statusCode: number, message: string, errors: object[] = [], stack: string = "") {
     super(message);
 
     this.statusCode = statusCode;
@@ -52,4 +47,4 @@ class ApiError extends Error {
   }
 }
 
-export {ApiError};
+export { ApiError };

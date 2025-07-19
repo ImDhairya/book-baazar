@@ -31,19 +31,21 @@ var __awaiter =
     });
   };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBooks = void 0;
-const api_response_1 = require("../utils/api-response");
+exports.healthCheckController = void 0;
 const async_handler_1 = require("../utils/async-handler");
 const db_1 = require("../libs/db");
 const api_errors_1 = require("../utils/api-errors");
-exports.getBooks = (0, async_handler_1.asyncHandler)((req, res) =>
+exports.healthCheckController = (0, async_handler_1.asyncHandler)((req, res, next) =>
   __awaiter(void 0, void 0, void 0, function* () {
-    const books = yield db_1.db.book.findMany({});
-    if (books) {
-      const response = new api_response_1.ApiResponse(200, books, "Books fetched successfully");
-      return res.status(response.statusCode).json(response);
-    } else {
-      throw new api_errors_1.ApiError(401, "Unable to find books");
+    try {
+      yield db_1.db.$queryRaw`SELECT 1`;
+      next();
+    } catch (error) {
+      console.error("🛑 Database connection failed:", error);
+      next(new api_errors_1.ApiError(500, "Database not connected"));
     }
   })
 );
+// app.get("/healthCheck", (req, res) => {
+//   return res.send("The app is working and healthy.");
+// });

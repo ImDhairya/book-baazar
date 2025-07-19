@@ -1,11 +1,7 @@
-import {NextFunction, RequestHandler, Request, Response} from "express";
+import { NextFunction, RequestHandler, Request, Response } from "express";
 
 export function asyncHandler(
-  requestHandler: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<any>
+  requestHandler: (req: Request, res: Response, next: NextFunction) => Promise<any>
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));

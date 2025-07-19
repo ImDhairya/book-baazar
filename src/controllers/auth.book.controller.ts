@@ -1,8 +1,8 @@
-import {Request, Response} from "express";
-import {ApiResponse} from "../utils/api-response";
-import {asyncHandler} from "../utils/async-handler";
-import {db} from "../libs/db";
-import {ApiError} from "../utils/api-errors";
+import { Request, Response } from "express";
+import { ApiResponse } from "../utils/api-response";
+import { asyncHandler } from "../utils/async-handler";
+import { db } from "../libs/db";
+import { ApiError } from "../utils/api-errors";
 
 export const getBooks = asyncHandler(async (req: Request, res: Response) => {
   const books = await db.book.findMany({});

@@ -10,7 +10,7 @@
 // export default bookRoute
 
 import express from "express";
-import {getBooks} from "../controllers/auth.book.controller";
+import { getBooks } from "../controllers/auth.book.controller";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 const bookRoute = express.Router();

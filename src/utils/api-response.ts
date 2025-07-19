@@ -25,4 +25,4 @@ class ApiResponse<DataResponse> {
   }
 }
 
-export {ApiResponse};
+export { ApiResponse };

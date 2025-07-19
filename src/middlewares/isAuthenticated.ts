@@ -1,29 +1,76 @@
-import {NextFunction, Request, Response} from "express";
-import {ApiError} from "../utils/api-errors";
-import {db} from "../libs/db";
-import jwt, {JwtPayload} from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import tokenCreator from "../utils/createTokens";
+import { ApiError } from "../utils/api-errors";
+import { db } from "../libs/db";
 
 interface AuthenticatedResponse extends Response {
-  user?: string | JwtPayload; // replace with your actual payload shape
+  user?: string | JwtPayload;
 }
-
 export const isAuthenticated = async (
   req: Request,
   res: AuthenticatedResponse,
   next: NextFunction
 ) => {
-  const {jwtToken} = req.cookies;
+  const { refreshToken, accessToken } = req.cookies;
 
-  if (!jwtToken) {
-    throw new ApiError(501, "User authentication failed");
+  try {
+    if (accessToken) {
+      const decodedData = jwt.verify(accessToken, process.env.ACCESS_SECRET!);
+
+      res.user = decodedData;
+      return next();
+    } else {
+      console.log("Access token not there.");
+    }
+  } catch (error) {
+    // access token is not present
+    console.log(error, "The access token is not present");
   }
 
-  const decode = await jwt.verify(jwtToken, process.env.JWT_SECRET!);
+  if (refreshToken) {
+    console.log("Refreshtoken", refreshToken);
+    try {
+      const decodeRefreshToken = jwt.verify(refreshToken, process.env.JWT_SECRET!) as JwtPayload;
 
-  if (decode) {
-    res.user = decode;
-    next();
+      // query to the db for the user and check both existing user and the db for the user is working or not.
+
+      const existingUser = await db.user.findUnique({
+        where: {
+          id: decodeRefreshToken.id,
+        },
+      });
+
+      if (!existingUser || existingUser.refreshToken !== refreshToken) {
+        throw new ApiError(401, "The user is not authenticated with refreshToken.");
+      }
+      const cookieData = {
+        id: decodeRefreshToken.id,
+      };
+      const createToken = await tokenCreator(cookieData, res);
+
+      await db.user.update({
+        where: {
+          id: decodeRefreshToken.id,
+        },
+        data: {
+          refreshToken: createToken?.refreshToken,
+          accessToken: createToken?.accessToken,
+        },
+      });
+      console.log(decodeRefreshToken, "hiello");
+      return next();
+      // query to the db that is the user with this refresh token there or not
+      // const data = {
+      //   id: decodeRefreshToken.id,
+      // };
+      // if (data) {
+      //   const createTokens = tokenCreator(data, res);
+      // }
+    } catch (error) {
+      console.error(error, "unable to verify refresh token.");
+    }
   } else {
-    throw new ApiError(501, "User not authenticated to this route.");
+    throw new ApiError(401, "User not authorized to access this route.");
   }
 };
